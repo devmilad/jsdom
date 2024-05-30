@@ -1,5 +1,4 @@
 const { chromium } = require('playwright');
-require("dotenv").config();
 
 // Function to fetch and parse gold data
 const gold = async () => {
@@ -9,7 +8,7 @@ const gold = async () => {
         const page = await browser.newPage();
 
         // Go to the website
-        await page.goto('https://www.bonbast.com/', { waitUntil: 'networkidle' });
+        await page.goto('https://www.bonbast.com/', { waitUntil: 'networkidle', timeout:60000 });
 
         // Ensure the element with the data is loaded
         await page.waitForSelector('#eur1');
@@ -33,4 +32,11 @@ const gold = async () => {
     }
 };
 
-gold();
+const cron = require('node-cron');
+// ! cron job
+cron.schedule('* * * * *', () => {
+    console.log('running a task every minute');
+    gold();
+});
+
+
